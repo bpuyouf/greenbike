@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import productsRouter from './routes/products.js';
-import { runMigrations } from './migrate.js';
+import { connectDb } from './db.js';
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ app.get('*', (req, res) => {
 });
 
 async function start() {
-  await runMigrations();
+  await connectDb();
 
   const port = process.env.PORT || 3000;
   app.listen(port, () => {
