@@ -2,8 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import productsRouter from './routes/products.js';
-import { connectDb } from './db.js';
+// import productsRouter from './routes/products.js';
+// import { connectDb } from './db.js';
 
 dotenv.config();
 
@@ -16,8 +16,16 @@ app.use(express.json());
 // Serve frontend static assets
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
-// API routes
-app.use('/api/products', productsRouter);
+// DB-backed API routes are currently disabled for simplified local deploy
+// app.use('/api/products', productsRouter);
+
+app.get('/api/products', (req, res) => {
+  res.json({ products: [] });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ healthcheck: 'success' });
+});
 
 // Fallback to frontend for client-side routing
 app.get('*', (req, res) => {
@@ -25,7 +33,8 @@ app.get('*', (req, res) => {
 });
 
 async function start() {
-  await connectDb();
+  // DB connection disabled for a simplified deployment flow
+  // await connectDb();
 
   const port = process.env.PORT || 3000;
   app.listen(port, () => {

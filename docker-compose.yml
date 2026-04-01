@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: greenbike_backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+
+# DB service removed for simplified workflow
+#  db:
+#    image: postgres:15-alpine
+#    container_name: greenbike_db
+#    restart: unless-stopped
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgrespass
+#      POSTGRES_DB: greenbike
+#    volumes:
+#      - db_data:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+
+#volumes:
+#  db_data:

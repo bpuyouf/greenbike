@@ -51,7 +51,9 @@ async function ensureUser(pool, username, password) {
   const check = await pool.query('SELECT 1 FROM pg_roles WHERE rolname = $1', [username]);
   if (check.rowCount === 0) {
     console.log(`Creating user '${username}'...`);
-    await pool.query(`CREATE ROLE "${username}" WITH LOGIN PASSWORD $1`, [password]);
+    // PostgreSQL does not allow parameter markers in PASSWORD clause, so interpolate safely with client.escapeLiteral behavior.
+    const safePassword = password.replace(/'/g, "''");
+    await pool.query(`CREATE ROLE "${username}" WITH LOGIN PASSWORD '${safePassword}'`);
   } else {
     console.log(`User '${username}' already exists (password not changed).`);
   }
