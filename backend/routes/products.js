@@ -19,7 +19,21 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { name, category, price, description } = req.body;
-    const product = await addProduct({ name, category, price, description });
+
+    if (!name || !category || price === undefined || !description) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    if (typeof name !== 'string' || typeof category !== 'string' || typeof description !== 'string') {
+      return res.status(400).json({ error: 'Invalid field types' });
+    }
+
+    const numericPrice = Number(price);
+    if (Number.isNaN(numericPrice) || numericPrice <= 0) {
+      return res.status(400).json({ error: 'Price must be a positive number' });
+    }
+
+    const product = await addProduct({ name, category, price: numericPrice, description });
     res.status(201).json(product);
   } catch (error) {
     console.error('Failed to create product', error);
