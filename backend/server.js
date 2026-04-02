@@ -10,7 +10,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
+export const app = express();
 app.use(express.json());
 
 // Serve frontend static assets
@@ -42,7 +42,9 @@ async function start() {
   });
 }
 
-start().catch((error) => {
-  console.error('Failed to start server', error);
-  process.exit(1);
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  start().catch((error) => {
+    console.error('Failed to start server', error);
+    process.exit(1);
+  });
+}
